@@ -6,8 +6,6 @@ import {
   COMMIT__factory,
   DividendPool,
   DividendPool__factory,
-  ERC1155StakeMiningV1Factory,
-  ERC1155StakeMiningV1Factory__factory,
   ERC20,
   ERC20__factory,
   ERC20BurnMiningV1,
@@ -20,8 +18,14 @@ import {
   ERC20StakeMiningV1__factory,
   ERC721StakeMiningV1Factory,
   ERC721StakeMiningV1Factory__factory,
-  FounderShare,
-  FounderShare__factory,
+  ERC1155StakeMiningV1Factory,
+  ERC1155StakeMiningV1Factory__factory,
+  ERC1155BurnMiningV1Factory,
+  ERC1155BurnMiningV1Factory__factory,
+  DAOFounderMiningV1Factory,
+  DAOFounderMiningV1Factory__factory,
+  DAOFounderShare,
+  DAOFounderShare__factory,
   GnosisSafe,
   GnosisSafe__factory,
   JobBoard,
@@ -138,7 +142,6 @@ export type WorkhardDAO = {
   vision: VISION;
   commit: COMMIT;
   right: RIGHT;
-  founderShare: FounderShare;
   stableReserve: StableReserve;
   jobBoard: JobBoard;
   marketplace: Marketplace;
@@ -156,6 +159,8 @@ export type WorkhardCommons = {
   erc20BurnMiningV1Factory: ERC20BurnMiningV1Factory;
   erc721StakeMiningV1Factory: ERC721StakeMiningV1Factory;
   erc1155StakeMiningV1Factory: ERC1155StakeMiningV1Factory;
+  erc1155BurnMiningV1Factory: ERC1155BurnMiningV1Factory;
+  daoFounderMiningV1Factory: DAOFounderMiningV1Factory;
 };
 
 export type WorkhardPeriphery = {
@@ -219,6 +224,14 @@ export class WorkhardClient {
         commonContracts.erc1155StakeMiningV1Factory,
         workhard.provider
       ),
+      erc1155BurnMiningV1Factory: ERC1155BurnMiningV1Factory__factory.connect(
+        commonContracts.erc1155BurnMiningV1Factory,
+        workhard.provider
+      ),
+      daoFounderMiningV1Factory: DAOFounderMiningV1Factory__factory.connect(
+        commonContracts.daoFounderShareV1Factory,
+        workhard.provider
+      ),
     };
     return new WorkhardClient(workhard, commons, option?.account);
   }
@@ -249,6 +262,10 @@ export class WorkhardClient {
       this.commons.erc721StakeMiningV1Factory.connect(signerOrProvider);
     this.commons.erc1155StakeMiningV1Factory =
       this.commons.erc1155StakeMiningV1Factory.connect(signerOrProvider);
+    this.commons.erc1155BurnMiningV1Factory =
+      this.commons.erc1155BurnMiningV1Factory.connect(signerOrProvider);
+    this.commons.daoFounderMiningV1Factory =
+      this.commons.daoFounderMiningV1Factory.connect(signerOrProvider);
     return this;
   };
 
@@ -280,10 +297,6 @@ export class WorkhardClient {
     let vision = VISION__factory.connect(contracts.vision, connector);
     let commit = COMMIT__factory.connect(contracts.commit, connector);
     let right = RIGHT__factory.connect(contracts.right, connector);
-    let founderShare = FounderShare__factory.connect(
-      contracts.founderShare,
-      connector
-    );
     let stableReserve = StableReserve__factory.connect(
       contracts.stableReserve,
       connector
@@ -321,7 +334,6 @@ export class WorkhardClient {
       vision,
       commit,
       right,
-      founderShare,
       stableReserve,
       jobBoard,
       marketplace,

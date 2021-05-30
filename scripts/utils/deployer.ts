@@ -30,8 +30,8 @@ import {
   Marketplace__factory,
   StableReserve,
   StableReserve__factory,
-  FounderShare,
-  FounderShare__factory,
+  DAOFounderShare,
+  DAOFounderShare__factory,
   TimelockedGovernance,
   TimelockedGovernance__factory,
   VISION,
@@ -229,13 +229,6 @@ export async function getRight(
   return RIGHT__factory.connect(right.address, signer);
 }
 
-export async function getFounderShare(
-  signer: SignerWithAddress
-): Promise<FounderShare> {
-  const teamShare = await autoDeploy("FounderShare");
-  return FounderShare__factory.connect(teamShare.address, signer);
-}
-
 export async function getStableReserve(
   signer: SignerWithAddress
 ): Promise<StableReserve> {
@@ -304,7 +297,6 @@ export async function getWorkhard(
     vision: (await getVision(signer)).address,
     commit: (await getCommit(signer)).address,
     right: (await getRight(signer)).address,
-    founderShare: (await getFounderShare(signer)).address,
     stableReserve: (await getStableReserve(signer)).address,
     jobBoard: (await getJobBoard(signer)).address,
     marketplace: (await getMarketplace(signer)).address,
@@ -329,6 +321,13 @@ export async function getWorkhard(
   const deployed = await autoDeploy("Workhard", controller, commons);
   const workhardDAO = Workhard__factory.connect(deployed.address, signer);
   return workhardDAO;
+}
+
+export async function getFounderShare(
+  signer: SignerWithAddress
+): Promise<FounderShare> {
+  const workhard = (await getWorkhard(signer)).address;
+  return DAOFounderShare__Factory.connect(teamShare.address, signer);
 }
 
 export async function upgradeToMasterDAO(

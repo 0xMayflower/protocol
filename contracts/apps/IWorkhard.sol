@@ -12,7 +12,6 @@ struct WorkhardDAO {
     address vision;
     address commit;
     address right;
-    address founderShare;
     address stableReserve;
     address jobBoard;
     address marketplace;
@@ -30,6 +29,8 @@ struct CommonContracts {
     address erc20BurnMiningV1Factory;
     address erc721StakeMiningV1Factory;
     address erc1155StakeMiningV1Factory;
+    address erc1155BurnMiningV1Factory;
+    address daoFounderShareV1Factory;
 }
 
 struct CloneParams {
@@ -45,6 +46,7 @@ struct CloneParams {
     string commitSymbol;
     string rightName;
     string rightSymbol;
+    uint256 newShareToMintForFounders;
     // timelock
     uint256 minDelay;
     uint256 launchDelay;

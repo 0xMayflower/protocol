@@ -19,6 +19,7 @@ import "../../../utils/Utils.sol";
 import "../../../utils/ERC20Recoverer.sol";
 
 struct EmitterConfig {
+    uint256 projId;
     uint256 initialEmission;
     uint256 minEmissionRatePerWeek;
     uint256 emissionCutRate;
@@ -26,12 +27,14 @@ struct EmitterConfig {
     address treasury;
     address gov;
     address token;
-    address founderShare;
     address protocolPool;
+    address daoFounderShare;
     address erc20BurnMiningFactory;
     address erc20StakeMiningFactory;
     address erc721StakeMiningFactory;
     address erc1155StakeMiningFactory;
+    address erc1155BurnMiningFactory;
+    address daoFounderShareFactory;
 }
 
 struct EmissionWeight {
@@ -100,6 +103,8 @@ contract TokenEmitter is
 
     uint256 public emissionWeekNum;
 
+    uint256 public override projId;
+
     event Start();
     event TokenEmission(uint256 amount);
     event EmissionCutRateUpdated(uint256 rate);
@@ -111,6 +116,7 @@ contract TokenEmitter is
         require(params.treasury != address(0), "Should not be zero");
         Governed.initialize(msg.sender);
         // set params
+        projId = params.projId;
         INITIAL_EMISSION = params.initialEmission;
         emission = params.initialEmission;
         minEmissionRatePerWeek = params.minEmissionRatePerWeek;
@@ -128,13 +134,11 @@ contract TokenEmitter is
         setFactory(params.erc20StakeMiningFactory);
         setFactory(params.erc721StakeMiningFactory);
         setFactory(params.erc1155StakeMiningFactory);
+        setFactory(params.erc1155BurnMiningFactory);
+        setFactory(params.daoFounderShareFactory);
         address _founderPool =
-            newPool(PoolType.ERC20BurnMiningV1, params.founderShare);
+            newPool(PoolType.DAOFounderMiningV1, params.daoFounderShare);
         founderPool = _founderPool;
-        require(
-            _founderPool.supportsInterface(IMiningPool(0).allocate.selector),
-            "Cannot allocate reward"
-        );
         Governed.setGovernance(params.gov);
     }
 
